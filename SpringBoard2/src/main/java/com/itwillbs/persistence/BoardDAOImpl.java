@@ -17,10 +17,16 @@ public class BoardDAOImpl implements BoardDAO {
 	
 	// 디비 연결정보 -> 객체 주입을 통해서 사용(root-context안에 들어있는)
 	@Inject
-	private SqlSession SqlSession;
+	private SqlSession sqlSession;
+	
+	// mapper의 NAMESPACE 정보 저장
+	private static final String NAMESPACE = "com.itwillbs.mapper.BoardMapper.";
 	
 	@Override
 	public void create(BoardVO vo) throws Exception {
+		logger.debug(" 연결된 mapper에 SQL 구문 실행 ");
+		
+		sqlSession.insert(NAMESPACE+"create",vo);
 		
 	}
 
