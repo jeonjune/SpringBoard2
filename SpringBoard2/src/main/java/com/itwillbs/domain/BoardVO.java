@@ -6,10 +6,11 @@ import lombok.Data;
 
 @Data
 public class BoardVO {
-	private Integer bno; // int보다 Integer 형태를 더 많이 사용
+	private Integer bno;
 	private String title;
 	private String content;
 	private String writer;
 	private Timestamp regdate;
 	private int viewcnt;
+	
 }

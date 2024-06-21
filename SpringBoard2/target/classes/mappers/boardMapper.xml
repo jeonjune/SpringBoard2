@@ -7,7 +7,63 @@
 
 	<!-- 글쓰기 -->
 	<insert id="create">
-		insert into tbl_board (title,content,writer) values (#{title},#{content},#{writer})
+		insert into tbl_board (title,content,writer) 
+		values(#{title},#{content},#{writer})	
 	</insert>
+	
+	<!-- 글 목록 조회 -->
+	<select id="listALL" resultType="BoardVO">
+		select * from tbl_board	
+	</select>
+	
+	<!-- 글 조회수 1증가 -->
+	<update id="updateReadCnt">
+		update tbl_board set viewcnt=viewcnt+1 
+		where bno=#{bno}	
+	</update>
+	
+	<!-- 특정 글정보를 조회 -->
+	<select id="getBoard" resultType="BoardVO">
+		select * from tbl_board 
+		where bno=#{bno}	
+	</select>
+	
+	<!-- 특정 글정보 수정 -->
+	<update id="updateBoard">
+		update tbl_board
+		set title=#{title}, writer=#{writer}, content=#{content}
+		where bno = #{bno}
+	</update>
+	
+	<!-- 특정 글정보 삭제 -->
+	<delete id="deleteBoard">
+		delete from tbl_board
+		where bno = #{bno}
+	</delete>
+	
+	<!-- 게시판 글 목록 ( 페이징 처리 1 ) -->
+	<select id="listPage" resultType="BoardVO">
+		<![CDATA[
+			select * from tbl_board
+			where bno > 0
+			order by bno desc, regdate desc
+			limit #{page},10
+		]]>		
+	</select>
+	
+	<!-- 게시판 글 목록 ( 페이징 처리 2 ) -->
+	<select id="listPage2" resultType="BoardVO">
+		<![CDATA[
+			select * from tbl_board
+			where bno > 0
+			order by bno desc, regdate desc
+			limit #{pageStart},${pageSize}
+		]]>		
+	</select>
+	
+	<!-- 게시판 총 글의 개수(페이징처리) -->
+	<select id="totalCount" resultType="int">
+		select count(bno) from tbl_board
+	</select>
 
 </mapper>

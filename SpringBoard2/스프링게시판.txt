@@ -1,15 +1,98 @@
-   스프링 게시판.txt
+스프링게시판.txt
 
- - DB 관련 파트
- 	디비 생성/ 계정 준비
- 	테이블 생성 (설계)
+ - DB관련 파트
+ 	디비 생성/계정준비
+ 	테이블 생성(설계)
  	더미(dummy)데이터 생성
- 	
+ 
  - 스프링MVC 파트
- 	개발에 필요한 패키지 설정 / 코드 규칙 설정
- 	개발 파트 분배
- 	테스트 동작의 구현
- 	
+    개발에 필요한 패키지 설정 / 코드 규칙설정
+    개발 파트 분배
+    테스트 동작의 구현    
+ 
  - 화면 파트
- 	jsp 페이지에서의 구현
- 	템플릿 사용
+    jsp 페이지에서의 구현
+    템플릿 사용
+    
+   
+   board 테이블 
+    CREATE TABLE `springdb`.`tbl_board` (
+  `bno` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(200) NOT NULL,
+  `content` TEXT NULL,
+  `writer` VARCHAR(50) NOT NULL,
+  `regdate` TIMESTAMP NOT NULL DEFAULT now(),
+  `viewcnt` INT NULL DEFAULT 0,
+  PRIMARY KEY (`bno`));
+  
+  
+  * 의존 객체 자동주입 : 별도의 설정없이 스프링(컨테이너)이 자동으로 의존 대상을
+  객체에 주입해서 사용가능하게 만드는것
+  
+  - @Inject
+  	java에서 지원하는 어노테이션(특정 프레임워크에 비종속적)
+  	찾는순서 : [타입] -> [@Qualifier] -> [이름] -> 주입 실패
+  	사용범위 : 멤버변수, setter(),생성자(),일반 메서드
+  	
+  - @Autowired
+    Spring에서 지원하는 어노테이션
+    찾는순서 : [타입] -> [이름] -> [@Qualifier] -> 주입 실패
+    사용범위 : 멤버변수, setter(),생성자(),일반 메서드
+  
+  - @Resource
+    java에서 지원하는 어노테이션(특정 프레임워크에 비종속적)
+    찾는순서 : [이름] -> [타입] -> [@Qualifier] -> 주입 실패
+    사용범위 : 멤버변수, setter()
+    
+    
+    @Qualifier : 객체의 별명(주입하는 객체가 하나 이상일때 구분용)
+    
+	<bean id="dataSource"
+	      class="com.zaxxer.hikari.HikariDataSource">
+	      ....
+	      <qualifier value="d1"/>
+	</bean>
+	<bean id="dataSource"
+	      class="com.zaxxer.hikari.HikariDataSource">
+	      ....
+	      <qualifier value="d2"/>
+	</bean>
+	
+	@Inject
+	@Autowired    @Qualifier("d1")
+	private DataSource ds;
+  
+  
+  
+	// 하단 페이징처리
+	
+	- 시작페이지 번호 ( startPage )
+		startPage = ( endPage - 블럭개수 ) + 1
+	- 끝페이지 번호 ( endPage )
+		endPage = ( int )( 올림( 페이지번호 / 블럭개수 ) * 블럭개수 )
+		
+		=> 추가 변경 (글 총 개수 < 끝 페이지)
+		진짜 endPage = 올림( 전체 글의 개수 / 페이지당 출력개수 )
+		 
+	- 전체 글의 개수 (DB 조회 - count()) 
+	- 이전 페이지 (prev)
+		prev = startPage == 1? false : true; 
+		prev = startPage != 1; 
+	- 다음 페이지 (next)
+		next = endPage * 페이징당 출력 >= 전체 글개수? false : true; 
+		next = endPage * 페이징당 출력 < 전체 글개수; 
+	
+	** 총 123개 / 페이지당 10개씩 출력
+	   총 페이지 13 / 페이지 블럭 10개
+	   	
+	- 3 페이지
+	  => startPage : 1, endPage : 10, next : 필요O, prev : 필요X
+	- 10 페이지
+	  => startPage : 1, endPage : 10, next : 필요O, prev : 필요X
+	- 12 페이지
+	  => startPage : 11, endPage : 13, next : 필요X, prev : 필요O  
+	- 13 페이지
+	  => startPage : 11, endPage : 13, next : 필요X, prev : 필요O  
+	  
+    
+    
