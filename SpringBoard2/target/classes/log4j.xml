@@ -19,6 +19,12 @@
 	</logger>
 	<logger name="com.itwillbs.service">
 		<level value="debug" />
+	</logger>	
+	<logger name="com.itwillbs.fileupload">
+		<level value="debug" />
+	</logger>
+	<logger name="com.itwillbs.mail">
+		<level value="debug" />
 	</logger>
 	
 	<!-- 3rdparty Loggers -->
